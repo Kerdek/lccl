@@ -4,8 +4,10 @@ package-lock.json
 lc.js
 main.js
 scanner.js
+tokenizer.js
 run.js
 lc.js.map
 main.js.map
 scanner.js.map
+tokenizer.js.map
 run.js.map

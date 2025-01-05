@@ -26,7 +26,9 @@ return s(e) })
 // mutates share nodes in the input
 // for save nodes, bubble and retry.
 // for application nodes, evaluate the lhs and generate a save node.
-// for share nodes, evalute the pointed node
+// for share nodes, evalute the pointed node and assign the pointer.
+// for variable nodes, throw an error.
+// do nothing for abstraction nodes.
 export const evaluate: (e: Graph) => Normal = e => homproc((call, ret) => {
 const s: (e: Graph) => Process = visit({
   sav: e => jmp(s(bubble(e))),

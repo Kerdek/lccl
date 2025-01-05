@@ -1,13 +1,5 @@
 node_modules/
 package-lock.json
 .vscode/
-lc.js
-main.js
-scanner.js
-tokenizer.js
-run.js
-lc.js.map
-main.js.map
-scanner.js.map
-tokenizer.js.map
-run.js.map
+*.js
+*.js.map

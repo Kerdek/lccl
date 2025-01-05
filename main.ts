@@ -1,4 +1,4 @@
-import { read, evaluate, print } from './lc.js';
+import { read, evaluate, print } from './graph.js';
 import { scanner } from './scanner.js';
 import { readFile } from 'fs/promises'
 import { tokenizer } from './tokenizer.js';

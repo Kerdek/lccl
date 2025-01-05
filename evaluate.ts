@@ -1,9 +1,8 @@
-// accept a save node and return a non-save node by
-
 import { assign } from "./assign.js"
 import { Graph, Normal, Sav, Term, visit } from "./graph.js"
 import { Process, homproc, jmp } from "./run.js"
 
+// accept a save node and return a non-save node by
 // bubbling the definition over the body
 const bubble: (e: Sav) => Term = e => homproc((call, ret) => {
 const s: (e: Sav) => Process = e => () =>

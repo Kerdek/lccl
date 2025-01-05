@@ -1,5 +1,5 @@
 import { Graph, visit } from "./graph"
-import { Process, homproc } from "./run"
+import { Process, homproc, jmp } from "./run"
 
 // accept an AST and give a string.
 // ignore the definition of save nodes.

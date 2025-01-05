@@ -1,7 +1,9 @@
-import { read, evaluate, print } from './graph.js';
-import { scanner } from './scanner.js';
+import { scanner } from './scanner.js'
 import { readFile } from 'fs/promises'
-import { tokenizer } from './tokenizer.js';
+import { print } from './print.js'
+import { tokenizer } from './tokenizer.js'
+import { evaluate } from './evaluate.js'
+import { read } from './read.js'
 
 if (process.argv[2] === undefined) {
   throw new Error('No input file specified.') }

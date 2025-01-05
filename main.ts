@@ -9,6 +9,9 @@ if (process.argv[2] === undefined) {
   throw new Error('No input file specified.') }
 
 try {
-  console.log(print(evaluate(read(tokenizer(scanner(await readFile(process.argv[2], { encoding: 'utf8' }), process.argv[2])))))) }
+  const s = await readFile(process.argv[2], { encoding: 'utf8' })
+  const e = read(tokenizer(scanner(s, process.argv[2])))
+  console.log(print(evaluate(e)))
+}
 catch (e) {
   console.log((e as Error).message) }

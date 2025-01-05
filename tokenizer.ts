@@ -1,4 +1,4 @@
-import { Pos, Scanner } from "./scanner"
+import { Pos, Scanner } from "./scanner.js"
 
 export type NonEOFTokenKind =
   "lparen" | "rparen" | "dot" | "rsolidus" | "identifier"

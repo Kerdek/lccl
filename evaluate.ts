@@ -1,25 +1,24 @@
 // accept a save node and return a non-save node by
 
-import { assign } from "./assign"
-import { Graph, Normal, Sav, Term, visit } from "./graph"
-import { Process, homproc, jmp } from "./run"
+import { assign } from "./assign.js"
+import { Graph, Normal, Sav, Term, visit } from "./graph.js"
+import { Process, homproc, jmp } from "./run.js"
 
 // bubbling the definition over the body
 const bubble: (e: Sav) => Term = e => homproc((call, ret) => {
-const sp = visit({
-  sav: y => call(s(y), () => jmp(s(e))),
-  app: ({ lhs, rhs }) =>
-    ret({ kind: "app",
-      lhs: { kind: "sav", definition: e.definition, body: lhs },
-      rhs: { kind: "sav", definition: e.definition, body: rhs } }),
-  abs: y =>
-    y.param === e.definition.name ? ret(y) :
-    ret({ kind: "abs", param: y.param,
-      body: { kind: "sav", definition: e.definition, body: y.body } }),
-  var: y => ret(y.name === e.definition.name ? e.definition : y),
-  shr: ret })
 const s: (e: Sav) => Process = e => () =>
-  call(sp(e.body), de =>
+  call(visit({
+    sav: y => call(s(y), () => jmp(s(e))),
+    app: ({ lhs, rhs }) =>
+      ret({ kind: "app",
+        lhs: { kind: "sav", definition: e.definition, body: lhs },
+        rhs: { kind: "sav", definition: e.definition, body: rhs } }),
+    abs: y =>
+      y.param === e.definition.name ? ret(y) :
+      ret({ kind: "abs", param: y.param,
+        body: { kind: "sav", definition: e.definition, body: y.body } }),
+    var: y => ret(y.name === e.definition.name ? e.definition : y),
+    shr: ret })(e.body), de =>
   ret(assign(e, de)))
 return s(e) })
 

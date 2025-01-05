@@ -1,12 +1,14 @@
-import { Term } from "./graph"
-import { Branch, Process, homproc, jmp } from "./run"
-import { Tokenizer } from "./tokenizer"
+import { di } from "./di.js"
+import { Term } from "./graph.js"
+import { Branch, Process, homproc, jmp } from "./run.js"
+import { Tokenizer } from "./tokenizer.js"
 
 // accept a tokenizer and give an AST.
 export const read: (src: Tokenizer) => Term = tk => homproc((call, ret) => {
 const
 fatal: (msg: string) => never = m => {
-  throw new Error(`(${tk.pos()[0]}:${tk.pos()[1]}:${tk.pos()[2]}): parser: ${m}`) },
+  const w = tk.pos()
+  throw new Error(`(${w[0]}:${w[1]}:${w[2]}): parser: ${m}`) },
 parameters: Process = () =>
   tk.take("dot") ? jmp(expression) :
   di(tk.take("identifier"), i =>

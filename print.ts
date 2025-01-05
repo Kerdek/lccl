@@ -1,5 +1,5 @@
-import { Graph, visit } from "./graph"
-import { Process, homproc, jmp } from "./run"
+import { Graph, visit } from "./graph.js"
+import { Process, homproc, jmp } from "./run.js"
 
 // accept an AST and give a string.
 // ignore the definition of save nodes.
@@ -8,7 +8,7 @@ export const print: (e: Graph) => string = e => homproc((call, ret) => {
 const
 p: (q: boolean, t: string) => string = (q, t) => q ?`(${t})` : t,
 l: (e: Graph) => Process = e => () =>
-  e.kind === "abs" ? call(l(e.body), dx => ret(`${e.param} ${dx}`)) :
+  e.kind === "abs" ? call(l(e.body), dx => ret(` ${e.param}${dx}`)) :
   call(s(false, true)(e), dx => ret(`.${dx}`)),
 s: (pr: boolean, rm: boolean) => (e: Graph) => Process = (pr, rm) => visit({
   app: ({ lhs, rhs }) =>

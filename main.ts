@@ -11,7 +11,7 @@ if (process.argv[2] === undefined) {
 try {
   const s = await readFile(process.argv[2], { encoding: 'utf8' })
   const e = read(tokenizer(scanner(s, process.argv[2])))
-  console.log(print(evaluate(e)))
+  console.log(print(evaluate(e, {})))
 }
 catch (e) {
   console.log((e as Error).message) }

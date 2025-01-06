@@ -1,1 +1,1 @@
-(\a b f.f a b) (\foo.foo) (\bar.bar) (\a b.b)
+(\x y.x) y (\a b.b)

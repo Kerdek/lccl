@@ -1,43 +1,23 @@
-import { assign } from "./assign.js"
-import { Graph, Normal, Sav, Term, visit } from "./graph.js"
+import { Term, Normal, visit, Env } from "./graph.js"
 import { Process, homproc, jmp } from "./run.js"
 
-// accept a save node and return a non-save node by
-// bubbling the definition over the body
-const bubble: (e: Sav) => Term = e => homproc((call, ret) => {
-const s: (e: Sav) => Process = e => () =>
-  call(visit({
-    sav: y => call(s(y), () => jmp(s(e))),
-    app: ({ lhs, rhs }) =>
-      ret({ kind: "app",
-        lhs: { kind: "sav", definition: e.definition, body: lhs },
-        rhs: { kind: "sav", definition: e.definition, body: rhs } }),
-    abs: y =>
-      y.param === e.definition.name ? ret(y) :
-      ret({ kind: "abs", param: y.param,
-        body: { kind: "sav", definition: e.definition, body: y.body } }),
-    var: y => ret(y.name === e.definition.name ? e.definition : y),
-    shr: ret })(e.body), de =>
-  ret(assign(e, de)))
-return s(e) })
-
 // evaluate an AST and return another AST
-// mutates share nodes in the input
 // for save nodes, bubble and retry.
 // for application nodes, evaluate the lhs and generate a save node.
 // for share nodes, evalute the pointed node and assign the pointer.
-// for variable nodes, throw an error.
-// do nothing for abstraction nodes.
-export const evaluate: (e: Graph) => Normal = e => homproc((call, ret) => {
-const s: (e: Graph) => Process = visit({
-  sav: e => jmp(s(bubble(e))),
+// for variable nodes, look it up in the environment,
+// evaluate it and update the pointer.
+// for abstraction nodes, save the environment.
+export const evaluate: (e: Term, env: Env) => Normal = (e, env) => homproc((call, ret) => {
+const s: (e: Term, env: Env) => Process = (e, env) => visit({
   app: ({ lhs, rhs }) =>
-    call(s(lhs), dx =>
-    jmp(s({ kind: "sav", definition: { kind: "shr", name: dx.param, ptr: rhs }, body: dx.body }))),
-  shr: e =>
-    call(s(e.ptr), dx => (
-    e.ptr = dx,
-    ret(dx))),
-  var: ({ name }) => { throw new Error(`Undefined reference to \`${name}\`.`)},
-  abs: ret })
-return s(e) })
+    call(s(lhs, env), dx =>
+    jmp(s(dx.body, { ...env, ...dx.env, [dx.param]: { env, ptr: rhs } }))),
+  var: ({ name }) => {
+    const u = env[name]
+    if (!u) {
+      throw new Error(`Undefined reference to \`${name}\`.`) }
+    return call(s(u.ptr, u.env), dx => (u.ptr = dx, ret(dx))) },
+  abs: ({ param, body, env: saved }) =>
+    ret({ kind: "abs", param, body, env: { ...env, ...saved } }) })(e)
+return s(e, env) })

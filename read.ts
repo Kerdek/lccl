@@ -14,7 +14,7 @@ parameters: Process = () =>
   di(tk.take("identifier"), i =>
   !i ? fatal(`Expected \`.\`.`) :
   call(parameters, dx =>
-  ret({ kind: "abs", param: i[1], body: dx }))),
+  ret({ kind: "abs", env: {}, param: i[1], body: dx }))),
 try_primary: () => Process | null = () =>
   tk.take("rsolidus") ? parameters :
   tk.take("lparen") ? () =>
